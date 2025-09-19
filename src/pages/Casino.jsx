@@ -1,4 +1,4 @@
-import SlotMachine from "../components/SlotMachine";
+import SlotMachine from "../components/SlotMachine.jsx";
 
 export default function Casino() {
   return (
