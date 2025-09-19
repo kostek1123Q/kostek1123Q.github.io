@@ -179,7 +179,7 @@ html, body {
   padding: 10px 16px;
   font-size: 14px;
   color: #666;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid #1f2937;
   max-height: 80px;
   overflow-y: auto;
   line-height: 1.4;
@@ -201,7 +201,7 @@ html, body {
 
 /* Dark mode support */
 body.dark-mode {
-  background-color: #111827;
+  background-color: #000001;
   color: #f3f4f6;
 }
 
@@ -215,7 +215,7 @@ body.dark-mode .messages {
 }
 
 body.dark-mode .msg {
-  background-color: #374151;
+  background-color: C;
   border-color: #4b5563;
 }
 
