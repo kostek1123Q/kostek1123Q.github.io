@@ -95,8 +95,8 @@ html, body {
 
 .form-section {
   padding: 14px 16px;
-  background: #1f2937;
-  border-top: 1px solid #1f2937;
+  background: #fff;
+  border-top: 1px solid #ddd;
 }
 
 .input-area {
@@ -201,7 +201,7 @@ html, body {
 
 /* Dark mode support */
 body.dark-mode {
-  background-color: #000001;
+  background-color: #111827;
   color: #f3f4f6;
 }
 
@@ -215,7 +215,7 @@ body.dark-mode .messages {
 }
 
 body.dark-mode .msg {
-  background-color: C;
+  background-color: #374151;
   border-color: #4b5563;
 }
 
