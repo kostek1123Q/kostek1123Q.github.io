@@ -5,33 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Global Chat PL</title>
   <link rel="stylesheet" href="styles.css" />
-
-  <script>
-    // Blokada DevTools i prawokliku
-    document.addEventListener('keydown', function (e) {
-      if (
-        e.key === 'F12' ||
-        (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase())) ||
-        (e.ctrlKey && ['U', 'S'].includes(e.key.toUpperCase()))
-      ) {
-        e.preventDefault();
-        e.stopPropagation();
-        return false;
-      }
-    });
-    document.addEventListener('contextmenu', function (e) {
-      e.preventDefault();
-      return false;
-    });
-
-    Object.defineProperty(console, "_commandLineAPI", {
-      get: function () {
-        throw new Error("🚫 Konsola zablokowana");
-      }
-    });
-  </script>
-</head>
-
 <body>
   <div class="chat-wrapper">
     <div id="messages" class="messages"></div>
