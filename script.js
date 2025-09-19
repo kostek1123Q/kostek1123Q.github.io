@@ -1,4 +1,4 @@
-const BACKEND_URL = 'https://globalchatpl-backend.onrender.com';
+const BACKEND_URL = 'https://globalchatpl.onrender.com';
 
 const messagesDiv = document.getElementById('messages');
 const sendBtn = document.getElementById('sendBtn');
