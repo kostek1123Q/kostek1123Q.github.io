@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Global Chat PL</title>
+  <link rel="stylesheet" href="styles.css" />
+
+  <script>
+    // Blokada DevTools i prawokliku
+    document.addEventListener('keydown', function (e) {
+      if (
+        e.key === 'F12' ||
+        (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase())) ||
+        (e.ctrlKey && ['U', 'S'].includes(e.key.toUpperCase()))
+      ) {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+      }
+    });
+    document.addEventListener('contextmenu', function (e) {
+      e.preventDefault();
+      return false;
+    });
+
+    Object.defineProperty(console, "_commandLineAPI", {
+      get: function () {
+        throw new Error("🚫 Konsola zablokowana");
+      }
+    });
+  </script>
+</head>
+
+<body>
+  <div class="chat-wrapper">
+    <div id="messages" class="messages"></div>
+
+    <div class="form-section">
+      <div class="input-area">
+        <textarea id="message" placeholder="Wpisz wiadomość..." maxlength="200"></textarea>
+        <button id="sendBtn">➤</button>
+      </div>
+
+      <div class="settings">
+        <label>Nick:</label>
+        <input type="text" id="nick" maxlength="20" placeholder="Anonim" />
+
+        <label>Kolor:</label>
+        <input type="color" id="color" value="#1e40af" />
+
+        <label>Awatar:</label>
+        <input type="file" id="avatar" accept="image/*" />
+      </div>
+    </div>
+
+    <div class="commands-list">
+      <h3>Lista komend:</h3>
+      <<ul>
+  <li><b>/info</b> – wyświetla informacje o czacie</li>
+  <li><b>/lightmode</b> – włącza light mode</li>
+  <li><b>/darkmode</b> – włącza darkmode</li>
+  <li><b>/login [nazwa] [hasło]</b> – logowanie</li>
+  <li><b>/register [nazwa] [hasło]</b> – rejestracja</li>
+  <li><b>GlobalChatPL™</b> dziękujemy za korzystanie z GlobalChat!</li>
+</ul>
+    </div>
+  </div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
