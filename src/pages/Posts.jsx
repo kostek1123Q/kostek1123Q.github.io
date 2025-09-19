@@ -6,14 +6,14 @@ export default function Posts() {
   const [text, setText] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:5000/posts")
+    fetch("https://globalchat-backend.onrender.com/posts")
       .then(res => res.json())
       .then(data => setPosts(data));
   }, []);
 
   const addPost = async () => {
     if (!nick || !text) return;
-    const res = await fetch("http://localhost:5000/posts", {
+    const res = await fetch("https://globalchat-backend.onrender.com/posts", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ nick, text })
