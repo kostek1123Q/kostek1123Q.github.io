@@ -95,8 +95,8 @@ html, body {
 
 .form-section {
   padding: 14px 16px;
-  background: #fff;
-  border-top: 1px solid #ddd;
+  background: #1f2937;
+  border-top: 1px solid #1f2937;
 }
 
 .input-area {
@@ -179,7 +179,7 @@ html, body {
   padding: 10px 16px;
   font-size: 14px;
   color: #666;
-  border-top: 1px solid #1f2937;
+  border-top: 1px solid #ddd;
   max-height: 80px;
   overflow-y: auto;
   line-height: 1.4;
