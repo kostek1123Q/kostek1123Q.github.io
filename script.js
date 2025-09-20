@@ -133,6 +133,12 @@ async function sendMessage() {
     messageInput.value = '';
     return;
   }
+if (text === '/cutemode') {
+  setTheme('cute');
+  messageInput.value = '';
+  return;
+ }
+
 
   // Pobierz hasło z inputa (może być puste)
   const password = passwordInput ? passwordInput.value.trim() : '';
