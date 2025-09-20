@@ -10,14 +10,15 @@ const passwordInput = document.getElementById('password'); // Dodaj pole hasła 
 
 let avatarDataUrl = null;
 
-// ====== Funkcja ustawiająca motyw ======
 function setTheme(mode) {
-  document.body.classList.remove('dark-mode', 'pastel-mode', 'neon-mode');
+  document.body.classList.remove('dark-mode', 'pastel-mode', 'neon-mode', 'cutemode');
   if (mode === 'dark') document.body.classList.add('dark-mode');
   if (mode === 'pastel') document.body.classList.add('pastel-mode');
   if (mode === 'neon') document.body.classList.add('neon-mode');
+  if (mode === 'cute') document.body.classList.add('cutemode');
   localStorage.setItem('theme', mode);
 }
+
 
 // Motyw: wczytanie z pamięci
 const savedTheme = localStorage.getItem('theme');
