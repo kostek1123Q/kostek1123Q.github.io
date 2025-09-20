@@ -199,7 +199,7 @@ html, body {
   }
 }
 
-/* Dark mode support */
+/* === Dark mode === */
 body.dark-mode {
   background-color: #111827;
   color: #f3f4f6;
@@ -248,4 +248,114 @@ body.dark-mode .commands-list {
 body.dark-mode .commands-list {
   background: #111827;
   border-top-color: #374151;
+}
+
+/* === Pastel mode === */
+body.pastel-mode {
+  background-color: #fffafc;
+  color: #444;
+}
+
+body.pastel-mode .chat-wrapper {
+  background: #fdfdfe;
+  box-shadow: 0 8px 24px rgba(200, 170, 200, 0.2);
+}
+
+body.pastel-mode .messages {
+  background: #fce7f3;
+}
+
+body.pastel-mode .msg {
+  background-color: #fde68a;
+  border-color: #fbcfe8;
+}
+
+body.pastel-mode .msg.system {
+  background: #bbf7d0;
+  color: #065f46;
+}
+
+body.pastel-mode .input-area textarea,
+body.pastel-mode .input-area button,
+body.pastel-mode input[type="text"] {
+  background-color: #fdf4ff;
+  color: #333;
+  border-color: #e9d5ff;
+}
+
+body.pastel-mode .input-area button {
+  background: #a78bfa;
+  color: white;
+}
+
+body.pastel-mode .input-area button:hover {
+  background: #7c3aed;
+}
+
+body.pastel-mode .settings label,
+body.pastel-mode .commands-list {
+  color: #6b7280;
+}
+
+body.pastel-mode .commands-list {
+  background: #e0f2fe;
+  border-top-color: #bae6fd;
+}
+
+/* === Neon mode === */
+body.neon-mode {
+  background-color: #0d0d0d;
+  color: #f8f8f8;
+}
+
+body.neon-mode .chat-wrapper {
+  background: #111;
+  box-shadow: 0 0 20px rgba(0,255,255,0.4);
+}
+
+body.neon-mode .messages {
+  background: #0d0d0d;
+}
+
+body.neon-mode .msg {
+  background: #1a1a1a;
+  border: 1px solid #0ff;
+  color: #0ff;
+  text-shadow: 0 0 4px #0ff, 0 0 8px #0ff;
+}
+
+body.neon-mode .msg.system {
+  background: #111;
+  color: #ff00ff;
+  text-shadow: 0 0 6px #ff00ff;
+}
+
+body.neon-mode .input-area textarea,
+body.neon-mode .input-area button,
+body.neon-mode input[type="text"] {
+  background-color: #000;
+  color: #0ff;
+  border-color: #0ff;
+  text-shadow: 0 0 4px #0ff;
+}
+
+body.neon-mode .input-area button {
+  background: #ff00ff;
+  color: #fff;
+  text-shadow: 0 0 6px #ff00ff;
+}
+
+body.neon-mode .input-area button:hover {
+  background: #ff1493;
+}
+
+body.neon-mode .settings label,
+body.neon-mode .commands-list {
+  color: #39ff14;
+  text-shadow: 0 0 6px #39ff14;
+}
+
+body.neon-mode .commands-list {
+  background: #000;
+  border-top: 1px solid #0ff;
 }
