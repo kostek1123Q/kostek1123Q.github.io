@@ -359,3 +359,59 @@ body.neon-mode .commands-list {
   background: #000;
   border-top: 1px solid #0ff;
 }
+
+body.cutemode {
+  background-color: #fff0f6;
+  color: #4a044e;
+}
+
+body.cutemode .chat-wrapper {
+  background: #ffe4f1;
+  box-shadow: 0 0 20px rgba(255, 182, 193, 0.6);
+  border: 2px solid #fbcfe8;
+}
+
+body.cutemode .messages {
+  background: #fff0f6;
+}
+
+body.cutemode .msg {
+  background-color: #fbcfe8;
+  border: 1px solid #f472b6;
+  color: #4a044e;
+}
+
+body.cutemode .msg.system {
+  background: #fecdd3;
+  color: #831843;
+  font-style: italic;
+}
+
+body.cutemode .input-area textarea,
+body.cutemode .input-area button,
+body.cutemode input[type="text"] {
+  background-color: #fff0f6;
+  color: #4a044e;
+  border-color: #f9a8d4;
+}
+
+body.cutemode .input-area button {
+  background: #f472b6;
+  color: #fff;
+  font-weight: bold;
+  box-shadow: 0 0 6px rgba(244, 114, 182, 0.6);
+}
+
+body.cutemode .input-area button:hover {
+  background: #ec4899;
+}
+
+body.cutemode .settings label,
+body.cutemode .commands-list {
+  color: #831843;
+}
+
+body.cutemode .commands-list {
+  background: #ffe4f1;
+  border-top-color: #f9a8d4;
+}
