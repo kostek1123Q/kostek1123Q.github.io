@@ -10,11 +10,18 @@ const passwordInput = document.getElementById('password'); // Dodaj pole hasła 
 
 let avatarDataUrl = null;
 
-// Motyw: wczytanie
-const savedTheme = localStorage.getItem('theme');
-if (savedTheme === 'dark') {
-  document.body.classList.add('dark-mode');
+// ====== Funkcja ustawiająca motyw ======
+function setTheme(mode) {
+  document.body.classList.remove('dark-mode', 'pastel-mode', 'neon-mode');
+  if (mode === 'dark') document.body.classList.add('dark-mode');
+  if (mode === 'pastel') document.body.classList.add('pastel-mode');
+  if (mode === 'neon') document.body.classList.add('neon-mode');
+  localStorage.setItem('theme', mode);
 }
+
+// Motyw: wczytanie z pamięci
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme) setTheme(savedTheme);
 
 // Obsługa avatara
 avatarInput.addEventListener('change', () => {
@@ -54,9 +61,11 @@ function createMessageElement(msg) {
   if (isOwner) nickSpan.classList.add('owner');
   if (isGlobal) {
     nickSpan.classList.add('global');
-    // Jeśli tag jest już w nicku, nie duplikuj
     if (!msg.nick.includes('<span')) {
-      nickSpan.innerHTML = msg.nick.replace('GLOBALCHATPL', 'GLOBALCHATPL<span class="checkmark">✓</span>');
+      nickSpan.innerHTML = msg.nick.replace(
+        'GLOBALCHATPL',
+        'GLOBALCHATPL<span class="checkmark">✓</span>'
+      );
     }
   }
 
@@ -102,17 +111,24 @@ async function sendMessage() {
   const text = messageInput.value.trim();
   if (!text) return;
 
-  // Komendy motywu
+  // ====== Komendy motywu ======
   if (text === '/darkmode') {
-    document.body.classList.add('dark-mode');
-    localStorage.setItem('theme', 'dark');
+    setTheme('dark');
     messageInput.value = '';
     return;
   }
-
   if (text === '/lightmode') {
-    document.body.classList.remove('dark-mode');
-    localStorage.setItem('theme', 'light');
+    setTheme('light');
+    messageInput.value = '';
+    return;
+  }
+  if (text === '/pastelmode') {
+    setTheme('pastel');
+    messageInput.value = '';
+    return;
+  }
+  if (text === '/neonmode') {
+    setTheme('neon');
     messageInput.value = '';
     return;
   }
@@ -120,14 +136,12 @@ async function sendMessage() {
   // Pobierz hasło z inputa (może być puste)
   const password = passwordInput ? passwordInput.value.trim() : '';
 
-  // Nie używaj zastrzeżonych nicków
   const nick = nickInput.value.trim() || 'Anonim';
   if (nick.toUpperCase().includes('GLOBALCHATPL')) {
     alert('Nie możesz używać zastrzeżonego nicku GLOBALCHATPL ✓');
     return;
   }
 
-  // Sprawdź zakazane frazy
   const bannedPhrases = [
     'darmowa dziecia pornografia! jebac kostka hacked by ususzony <3<3<3',
     'jest tu ktoś z jpg?',
@@ -154,7 +168,7 @@ async function sendMessage() {
     } else {
       messageInput.value = '';
       avatarInput.value = '';
-      if(passwordInput) passwordInput.value = '';
+      if (passwordInput) passwordInput.value = '';
       avatarDataUrl = null;
       fetchMessages();
     }
@@ -163,9 +177,6 @@ async function sendMessage() {
     alert('Błąd wysyłania');
   }
 }
-
-// Automatyczna wiadomość co 10 minut wysyłana backendem - tutaj możesz usunąć ten setInterval, bo masz go na backendzie.
-// Jeśli chcesz zostawić, to możesz zmienić nick i parametry.
 
 sendBtn.addEventListener('click', sendMessage);
 messageInput.addEventListener('keydown', e => {
