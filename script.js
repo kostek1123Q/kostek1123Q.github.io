@@ -11,11 +11,11 @@ const passwordInput = document.getElementById('password'); // Dodaj pole hasła 
 let avatarDataUrl = null;
 
 function setTheme(mode) {
-  document.body.classList.remove('dark-mode', 'pastel-mode', 'neon-mode', 'cutemode');
+  document.body.classList.remove('dark-mode', 'pastel-mode', 'neon-mode', 'cute-mode');
   if (mode === 'dark') document.body.classList.add('dark-mode');
   if (mode === 'pastel') document.body.classList.add('pastel-mode');
   if (mode === 'neon') document.body.classList.add('neon-mode');
-  if (mode === 'cute') document.body.classList.add('cutemode');
+  if (mode === 'cute') document.body.classList.add('cute-mode');
   localStorage.setItem('theme', mode);
 }
 
