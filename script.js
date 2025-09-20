@@ -6,19 +6,44 @@ const messageInput = document.getElementById('message');
 const nickInput = document.getElementById('nick');
 const colorInput = document.getElementById('color');
 const avatarInput = document.getElementById('avatar');
-const passwordInput = document.getElementById('password'); // Dodaj pole hasła w HTML!
+const passwordInput = document.getElementById('password');
 
 let avatarDataUrl = null;
 
+// ================== Motywy ==================
 function setTheme(mode) {
   document.body.classList.remove('dark-mode', 'pastel-mode', 'neon-mode', 'cute-mode');
   if (mode === 'dark') document.body.classList.add('dark-mode');
   if (mode === 'pastel') document.body.classList.add('pastel-mode');
   if (mode === 'neon') document.body.classList.add('neon-mode');
   if (mode === 'cute') document.body.classList.add('cute-mode');
+  if (mode === 'light') ; // zostaw puste = brak dodatkowych klas
   localStorage.setItem('theme', mode);
 }
 
+// Systemowa wiadomość (lokalna, bez backendu)
+function addSystemMessage(text) {
+  const div = document.createElement('div');
+  div.classList.add('msg', 'system');
+
+  const content = document.createElement('div');
+  content.className = 'content';
+
+  const nickSpan = document.createElement('div');
+  nickSpan.className = 'nick global';
+  nickSpan.innerHTML = 'SYSTEM<span class="checkmark">✓</span>';
+
+  const textSpan = document.createElement('div');
+  textSpan.className = 'text';
+  textSpan.textContent = text;
+
+  content.appendChild(nickSpan);
+  content.appendChild(textSpan);
+  div.appendChild(content);
+
+  messagesDiv.appendChild(div);
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
 
 // Motyw: wczytanie z pamięci
 const savedTheme = localStorage.getItem('theme');
@@ -113,36 +138,23 @@ async function sendMessage() {
   if (!text) return;
 
   // ====== Komendy motywu ======
-  if (text === '/darkmode') {
-    setTheme('dark');
-    messageInput.value = '';
-    return;
-  }
-  if (text === '/lightmode') {
-    setTheme('light');
-    messageInput.value = '';
-    return;
-  }
-  if (text === '/pastelmode') {
-    setTheme('pastel');
-    messageInput.value = '';
-    return;
-  }
-  if (text === '/neonmode') {
-    setTheme('neon');
-    messageInput.value = '';
-    return;
-  }
-if (text === '/cutemode') {
-  setTheme('cute');
-  messageInput.value = '';
-  return;
- }
+  const themes = {
+    '/darkmode': { mode: 'dark', msg: '🌙 Zmieniono motyw na Dark Mode' },
+    '/lightmode': { mode: 'light', msg: '☀️ Zmieniono motyw na Light Mode' },
+    '/pastelmode': { mode: 'pastel', msg: '🎨 Zmieniono motyw na Pastel Mode' },
+    '/neonmode': { mode: 'neon', msg: '💡 Zmieniono motyw na Neon Mode' },
+    '/cutemode': { mode: 'cute', msg: '🌸 Zmieniono motyw na Cute Mode' }
+  };
 
+  if (themes[text]) {
+    setTheme(themes[text].mode);
+    addSystemMessage(themes[text].msg);
+    messageInput.value = '';
+    return;
+  }
 
-  // Pobierz hasło z inputa (może być puste)
+  // ====== Normalna wiadomość ======
   const password = passwordInput ? passwordInput.value.trim() : '';
-
   const nick = nickInput.value.trim() || 'Anonim';
   if (nick.toUpperCase().includes('GLOBALCHATPL')) {
     alert('Nie możesz używać zastrzeżonego nicku GLOBALCHATPL ✓');
