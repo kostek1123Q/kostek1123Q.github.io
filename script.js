@@ -250,41 +250,10 @@ document.getElementById('sendPMBtn').addEventListener('click', () => {
 
 async function sendPrivateMessage(toNick, text) {
   const fromNick = nickInput.value.trim() || 'Anonim';
-  let password = currentPassword;
+  const password = currentPassword;
 
   if (!text) return alert('Wiadomość nie może być pusta.');
 
-  // ✅ Upewnij się, że konto istnieje przed wysłaniem PM
-  try {
-    const accountCheckRes = await fetch(`${BACKEND_URL}/getPMs/${encodeURIComponent(fromNick)}`);
-    if (!accountCheckRes.ok) throw new Error('Błąd sprawdzania konta PM');
-
-    // Jeśli currentPassword nie ustawione, pobierz z pola
-    if (!password && passwordInput) {
-      password = passwordInput.value.trim();
-      currentPassword = password;
-    }
-
-    // Spróbuj zarejestrować konto tymczasowo, jeśli backend zwróci błąd przy wysyłce PM
-  } catch (err) {
-    // Konto może nie istnieć, zarejestruj je wysyłając "dummy" wiadomość
-    if (!password) {
-      password = passwordInput.value.trim() || '1234';
-      currentPassword = password;
-    }
-
-    try {
-      await fetch(`${BACKEND_URL}/send`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: 'Rejestracja tymczasowa', nick: fromNick, password })
-      });
-    } catch (err2) {
-      console.error('Błąd rejestracji konta do PM:', err2);
-    }
-  }
-
-  // ✅ Wysyłanie PM
   try {
     const res = await fetch(`${BACKEND_URL}/sendPM`, {
       method: 'POST',
@@ -295,7 +264,6 @@ async function sendPrivateMessage(toNick, text) {
     if (data.success) {
       alert('Wiadomość prywatna wysłana!');
       fetchPrivateMessages();
-      document.getElementById('messagepv').value = '';
     } else {
       alert('Błąd: ' + data.error);
     }
