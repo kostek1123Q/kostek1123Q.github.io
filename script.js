@@ -8,6 +8,7 @@ const colorInput = document.getElementById('color');
 const avatarInput = document.getElementById('avatar');
 const passwordInput = document.getElementById('password');
 const activeCountSpan = document.getElementById('activeCount');
+const pmDiv = document.getElementById('pmMessages'); // div do wyświetlania PM
 
 async function fetchActiveUsers() {
   try {
@@ -87,7 +88,6 @@ function createMessageElement(msg) {
 
   if (isSystem) div.classList.add('system');
 
-  // Avatar
   const img = document.createElement('img');
   img.src = msg.avatar || `https://i.pravatar.cc/40?u=${encodeURIComponent(msg.nick)}`;
   img.alt = 'Avatar';
@@ -95,11 +95,9 @@ function createMessageElement(msg) {
   if (isOwner || isGlobal) img.classList.add('owner-avatar');
   div.appendChild(img);
 
-  // Treść wiadomości
   const content = document.createElement('div');
   content.className = 'content';
 
-  // Nick + tag
   const nickSpan = document.createElement('div');
   nickSpan.className = 'nick';
   nickSpan.innerHTML = msg.nick;
@@ -177,7 +175,6 @@ async function sendMessage() {
   const text = messageInput.value.trim();
   if (!text) return;
 
-  // Komendy motywu
   const themes = {
     '/darkmode': { mode: 'dark', msg: '🌙 Zmieniono motyw na Dark Mode' },
     '/lightmode': { mode: 'light', msg: '☀️ Zmieniono motyw na Light Mode' },
@@ -194,11 +191,7 @@ async function sendMessage() {
   }
 
   const nick = nickInput.value.trim() || 'Anonim';
-  
-  // Pobierz hasło tylko raz
-  if (!currentPassword && passwordInput) {
-    currentPassword = passwordInput.value.trim();
-  }
+  if (!currentPassword && passwordInput) currentPassword = passwordInput.value.trim();
 
   if (nick.toUpperCase().includes('GLOBALCHATPL')) {
     alert('Nie możesz używać zastrzeżonego nicku GLOBALCHATPL ✓');
@@ -245,8 +238,6 @@ async function sendMessage() {
 document.getElementById('sendPMBtn').addEventListener('click', async () => {
   const toNick = document.getElementById('nickpv').value.trim() || 'Anonim';
   const text = document.getElementById('messagepv').value.trim();
-
-  // Pobieramy aktualne hasło z inputa
   const password = passwordInput?.value.trim();
   if (!password) return alert('Podaj hasło aby wysłać PM.');
 
@@ -255,9 +246,7 @@ document.getElementById('sendPMBtn').addEventListener('click', async () => {
 
 async function sendPrivateMessage(toNick, text, password) {
   const fromNick = nickInput.value.trim() || 'Anonim';
-
-  if (!text) return alert('Wiadomość nie może być pusta.');
-  if (!password) return alert('Podaj hasło aby wysłać PM.');
+  if (!text || !password) return alert('Uzupełnij dane do PM.');
 
   try {
     const res = await fetch(`${BACKEND_URL}/sendPM`, {
@@ -265,17 +254,11 @@ async function sendPrivateMessage(toNick, text, password) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ fromNick, toNick, text, password })
     });
-
-    if (!res.ok) {
-      const errData = await res.json().catch(() => ({}));
-      return alert('Błąd: ' + (errData.error || res.statusText));
-    }
-
     const data = await res.json();
     if (data.success) {
       alert('Wiadomość prywatna wysłana!');
-      fetchPrivateMessages();
       document.getElementById('messagepv').value = '';
+      fetchPrivateMessages();
     } else {
       alert('Błąd: ' + data.error);
     }
@@ -285,23 +268,40 @@ async function sendPrivateMessage(toNick, text, password) {
   }
 }
 
-// ================== POBIERANIE WIADOMOŚCI PRYWATNYCH ==================
+// ================== POBIERANIE I WYŚWIETLANIE PM ==================
 async function fetchPrivateMessages() {
   const nick = nickInput.value.trim() || 'Anonim';
   try {
     const res = await fetch(`${BACKEND_URL}/getPMs/${encodeURIComponent(nick)}`);
-    if (!res.ok) {
-      const errData = await res.json().catch(() => ({}));
-      return console.error('Błąd pobierania PM:', errData.error || res.statusText);
-    }
     const data = await res.json();
-    console.log('Twoje PM:', data);
-    // Tutaj możesz stworzyć własny UI do wyświetlania PM
+    pmDiv.innerHTML = '';
+
+    data.forEach(pm => {
+      const div = document.createElement('div');
+      div.classList.add('pm-msg');
+      div.style.border = '1px solid #ccc';
+      div.style.padding = '5px';
+      div.style.margin = '5px 0';
+      div.style.borderRadius = '5px';
+      div.style.backgroundColor = pm.fromNick === nick ? '#e0ffe0' : '#f0f0f0';
+
+      const header = document.createElement('div');
+      header.style.fontWeight = 'bold';
+      header.textContent = `${pm.fromNick} → ${pm.toNick} [${new Date(pm.time).toLocaleTimeString()}]`;
+
+      const text = document.createElement('div');
+      text.textContent = pm.text;
+
+      div.appendChild(header);
+      div.appendChild(text);
+      pmDiv.appendChild(div);
+    });
+
+    pmDiv.scrollTop = pmDiv.scrollHeight;
   } catch (err) {
-    console.error(err);
+    console.error('Błąd pobierania PM:', err);
   }
 }
-
 
 // ================== POBIERANIE PROFILU UŻYTKOWNIKA ==================
 async function fetchUserProfile(nick) {
@@ -309,9 +309,7 @@ async function fetchUserProfile(nick) {
     const res = await fetch(`${BACKEND_URL}/profile/${encodeURIComponent(nick)}`);
     const data = await res.json();
     if (data.error) return alert(data.error);
-
     console.log('Profil użytkownika:', data);
-    // Tutaj możesz pokazać modal z profilem
   } catch (err) {
     console.error(err);
   }
@@ -328,4 +326,6 @@ messageInput.addEventListener('keydown', e => {
 
 // ================== Start ==================
 fetchMessages();
+fetchPrivateMessages();
 setInterval(fetchMessages, 3000);
+setInterval(fetchPrivateMessages, 3000);
