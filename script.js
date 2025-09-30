@@ -242,16 +242,21 @@ async function sendMessage() {
 }
 
 // ================== WYŚLIJ WIADOMOŚĆ PRYWATNĄ ==================
-document.getElementById('sendPMBtn').addEventListener('click', () => {
+document.getElementById('sendPMBtn').addEventListener('click', async () => {
   const toNick = document.getElementById('nickpv').value.trim() || 'Anonim';
   const text = document.getElementById('messagepv').value.trim();
-  sendPrivateMessage(toNick, text);
+
+  // Upewniamy się, że currentPassword jest ustawione
+  if (!currentPassword && passwordInput) {
+    currentPassword = passwordInput.value.trim();
+  }
+
+  await sendPrivateMessage(toNick, text);
 });
 
 async function sendPrivateMessage(toNick, text) {
   const fromNick = nickInput.value.trim() || 'Anonim';
-  // Pobieramy hasło z input, jeśli currentPassword nie jest ustawione
-  const password = currentPassword || passwordInput.value.trim();
+  const password = currentPassword;
 
   if (!text) return alert('Wiadomość nie może być pusta.');
   if (!password) return alert('Podaj hasło aby wysłać PM.');
@@ -262,6 +267,10 @@ async function sendPrivateMessage(toNick, text) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ fromNick, toNick, text, password })
     });
+
+    // Debug: log body
+    // console.log({ fromNick, toNick, text, password });
+
     const data = await res.json();
     if (data.success) {
       alert('Wiadomość prywatna wysłana!');
