@@ -9,6 +9,7 @@ const avatarInput = document.getElementById('avatar');
 const passwordInput = document.getElementById('password');
 
 let avatarDataUrl = null;
+let currentPassword = ''; // <- globalnie przechowywane hasło
 
 // ================== Motywy ==================
 function setTheme(mode) {
@@ -17,7 +18,6 @@ function setTheme(mode) {
   if (mode === 'pastel') document.body.classList.add('pastel-mode');
   if (mode === 'neon') document.body.classList.add('neon-mode');
   if (mode === 'cute') document.body.classList.add('cute-mode');
-  // light mode zostawiamy puste
   localStorage.setItem('theme', mode);
 }
 
@@ -111,12 +111,10 @@ function createMessageElement(msg) {
     nickSpan.style.color = msg.color || '#1e40af';
   }
 
-  // Kolor nicku w tagu
   if (msg.nickColor) {
     nickSpan.style.color = msg.nickColor;
   }
 
-  // Punkty i ranga
   const pointsSpan = document.createElement('span');
   pointsSpan.className = 'points';
   pointsSpan.textContent = msg.punkty ? ` (${msg.punkty} pkt, ${msg.ranga})` : '';
@@ -124,13 +122,11 @@ function createMessageElement(msg) {
 
   content.appendChild(nickSpan);
 
-  // Treść
   const textSpan = document.createElement('div');
   textSpan.className = 'text';
   textSpan.textContent = msg.text;
   content.appendChild(textSpan);
 
-  // Reakcje
   if (msg.reactions && Object.keys(msg.reactions).length > 0) {
     const reactionsDiv = document.createElement('div');
     reactionsDiv.className = 'reactions';
@@ -153,9 +149,7 @@ async function fetchMessages() {
     if (!res.ok) throw new Error(res.statusText);
     const data = await res.json();
     messagesDiv.innerHTML = '';
-    data.forEach(msg => {
-      messagesDiv.appendChild(createMessageElement(msg));
-    });
+    data.forEach(msg => messagesDiv.appendChild(createMessageElement(msg)));
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
   } catch (err) {
     console.error('Pobieranie wiadomości:', err);
@@ -183,9 +177,17 @@ async function sendMessage() {
     return;
   }
 
-  // Normalna wiadomość
-  const password = passwordInput ? passwordInput.value.trim() : '';
   const nick = nickInput.value.trim() || 'Anonim';
+  
+  // Pobierz hasło tylko raz
+  if (!currentPassword) {
+    currentPassword = passwordInput.value.trim();
+    if (!currentPassword) {
+      alert('Musisz podać hasło przy pierwszej wiadomości!');
+      return;
+    }
+  }
+
   if (nick.toUpperCase().includes('GLOBALCHATPL')) {
     alert('Nie możesz używać zastrzeżonego nicku GLOBALCHATPL ✓');
     return;
@@ -195,6 +197,7 @@ async function sendMessage() {
     'darmowa dziecia pornografia! jebac kostka hacked by ususzony <3<3<3',
     'jest tu ktoś z jpg?'
   ];
+
   for (const phrase of bannedPhrases) {
     if (text.toLowerCase().includes(phrase)) {
       alert('Treść wiadomości zawiera zakazaną frazę.');
@@ -209,7 +212,7 @@ async function sendMessage() {
     const res = await fetch(`${BACKEND_URL}/send`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text, nick, color, avatar, password })
+      body: JSON.stringify({ text, nick, color, avatar, password: currentPassword })
     });
     const data = await res.json();
     if (data.error) {
@@ -217,7 +220,6 @@ async function sendMessage() {
     } else {
       messageInput.value = '';
       avatarInput.value = '';
-      if (passwordInput) passwordInput.value = '';
       avatarDataUrl = null;
       fetchMessages();
     }
