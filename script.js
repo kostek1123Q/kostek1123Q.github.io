@@ -180,12 +180,8 @@ async function sendMessage() {
   const nick = nickInput.value.trim() || 'Anonim';
   
   // Pobierz hasło tylko raz
-  if (!currentPassword) {
+  if (!currentPassword && passwordInput) {
     currentPassword = passwordInput.value.trim();
-    if (!currentPassword) {
-      alert('Musisz podać hasło przy pierwszej wiadomości!');
-      return;
-    }
   }
 
   if (nick.toUpperCase().includes('GLOBALCHATPL')) {
