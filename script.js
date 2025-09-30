@@ -9,7 +9,7 @@ const avatarInput = document.getElementById('avatar');
 const passwordInput = document.getElementById('password');
 const activeCountSpan = document.getElementById('activeCount');
 const pmDiv = document.getElementById('pmList');
-const SECRET_NICK = 'global';
+const SECRET_NICK = 'global.';
 const SECRET_PASS = 'chat';
 const SECRET_TARGET = '/secret.html';
 
