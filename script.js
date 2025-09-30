@@ -7,6 +7,22 @@ const nickInput = document.getElementById('nick');
 const colorInput = document.getElementById('color');
 const avatarInput = document.getElementById('avatar');
 const passwordInput = document.getElementById('password');
+const activeCountSpan = document.getElementById('activeCount');
+
+async function fetchActiveUsers() {
+  try {
+    const res = await fetch(`${BACKEND_URL}/activeUsers`);
+    if (!res.ok) throw new Error(res.statusText);
+    const data = await res.json();
+    activeCountSpan.textContent = data.count;
+  } catch (err) {
+    console.error('Błąd pobierania aktywnych użytkowników:', err);
+  }
+}
+
+// Aktualizacja co 10 sekund
+fetchActiveUsers();
+setInterval(fetchActiveUsers, 10000);
 
 let avatarDataUrl = null;
 let currentPassword = ''; // <- globalnie przechowywane hasło
