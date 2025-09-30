@@ -6,6 +6,7 @@
   <title>Global Chat PL</title>
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
   <link rel="stylesheet" href="styles.css" />
+</head>
 <body>
   <div class="chat-wrapper">
     <div id="messages" class="messages"></div>
@@ -20,6 +21,9 @@
         <label>Nick:</label>
         <input type="text" id="nick" maxlength="20" placeholder="Anonim" />
 
+        <label>Hasło:</label>
+        <input type="password" id="password" maxlength="20" placeholder="Twoje hasło" />
+
         <label>Kolor:</label>
         <input type="color" id="color" value="#1e40af" />
 
@@ -31,22 +35,22 @@
     <div class="commands-list">
       <h3>Lista komend:</h3>
       <ul>
-  <li><b>/lightmode</b> – włącza lightmode</li>
-  <li><b>/pastelmode</b> - włącza pastelmode</li>
-  <li><b>/cutemode</b> - włącza cutemode</li>
-  <li><b>GlobalChatPL™</b> dziękujemy za korzystanie z GlobalChat!</li>
-</ul>
+        <li><b>/lightmode</b> – włącza lightmode</li>
+        <li><b>/pastelmode</b> – włącza pastelmode</li>
+        <li><b>/cutemode</b> – włącza cutemode</li>
+        <li><b>GlobalChatPL™</b> – dziękujemy za korzystanie z GlobalChat!</li>
+      </ul>
     </div>
   </div>
-  
-   <div class="wiadomosci">
+
+  <div class="wiadomosci">
     <h2>Wyślij wiadomość do właściciela strony.</h2>
     <label for="nickpv">Twój nick:</label>
     <input type="text" id="nickpv" placeholder="np. użytkownik">
-    
+
     <label for="messagepv">Wiadomość:</label>
     <textarea id="messagepv" placeholder="Wpisz wiadomość..."></textarea>
-    
+
     <button onclick="sendMessage()">Wyślij</button>
     <div class="status" id="status"></div>
   </div>
@@ -56,11 +60,11 @@
     let canSend = true;
 
     function sendMessage() {
-      const nick = document.getElementById('nickpv').value.trim() || 'Anonim';
-      const message = document.getElementById('messagepv').value.trim();
+      const nickpv = document.getElementById('nickpv').value.trim() || 'Anonim';
+      const messagepv = document.getElementById('messagepv').value.trim();
       const status = document.getElementById('status');
 
-      if (!message) {
+      if (!messagepv) {
         status.textContent = 'Wiadomość nie może być pusta.';
         status.style.color = 'orange';
         return;
@@ -101,6 +105,7 @@
     }
   </script>
 
+  <!-- Twój chat.js -->
   <script src="script.js" defer></script>
 </body>
 </html>
