@@ -415,3 +415,162 @@ body.cutemode .commands-list {
   background: #ffe4f1;
   border-top-color: #f9a8d4;
 }
+
+/* === Sekcja wiadomości do właściciela === */
+.wiadomosci {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 16px;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.wiadomosci h2 {
+  font-size: 1.3rem;
+  margin-bottom: 8px;
+  color: inherit;
+  text-align: center;
+}
+
+.wiadomosci label {
+  font-weight: 500;
+  margin-top: 8px;
+}
+
+.wiadomosci input[type="text"],
+.wiadomosci textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1.5px solid #ccc;
+  font-size: 15px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.wiadomosci input[type="text"]:focus,
+.wiadomosci textarea:focus {
+  border-color: #3b82f6;
+  outline: none;
+  box-shadow: 0 0 5px rgba(59,130,246,0.4);
+}
+
+.wiadomosci textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.wiadomosci button {
+  align-self: flex-start;
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.wiadomosci button:hover {
+  background: #2563eb;
+}
+
+.wiadomosci .status {
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+/* === Dark mode === */
+body.dark-mode .wiadomosci {
+  background: #1f2937;
+  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .wiadomosci input,
+body.dark-mode .wiadomosci textarea {
+  background: #111827;
+  border-color: #374151;
+  color: #f3f4f6;
+}
+
+body.dark-mode .wiadomosci button {
+  background: #2563eb;
+}
+
+body.dark-mode .wiadomosci button:hover {
+  background: #1d4ed8;
+}
+
+/* === Pastel mode === */
+body.pastel-mode .wiadomosci {
+  background: #fdf4ff;
+  box-shadow: 0 8px 24px rgba(200, 170, 200, 0.2);
+}
+
+body.pastel-mode .wiadomosci input,
+body.pastel-mode .wiadomosci textarea {
+  background: #fff;
+  border-color: #e9d5ff;
+  color: #333;
+}
+
+body.pastel-mode .wiadomosci button {
+  background: #a78bfa;
+}
+
+body.pastel-mode .wiadomosci button:hover {
+  background: #7c3aed;
+}
+
+/* === Neon mode === */
+body.neon-mode .wiadomosci {
+  background: #111;
+  border: 1px solid #0ff;
+  box-shadow: 0 0 15px rgba(0,255,255,0.3);
+}
+
+body.neon-mode .wiadomosci input,
+body.neon-mode .wiadomosci textarea {
+  background: #000;
+  border-color: #0ff;
+  color: #0ff;
+  text-shadow: 0 0 4px #0ff;
+}
+
+body.neon-mode .wiadomosci button {
+  background: #ff00ff;
+  text-shadow: 0 0 6px #ff00ff;
+}
+
+body.neon-mode .wiadomosci button:hover {
+  background: #ff1493;
+}
+
+/* === Cute mode === */
+body.cutemode .wiadomosci {
+  background: #ffe4f1;
+  border: 2px solid #fbcfe8;
+  box-shadow: 0 0 12px rgba(255, 182, 193, 0.6);
+}
+
+body.cutemode .wiadomosci input,
+body.cutemode .wiadomosci textarea {
+  background: #fff0f6;
+  border-color: #f9a8d4;
+  color: #4a044e;
+}
+
+body.cutemode .wiadomosci button {
+  background: #f472b6;
+  font-weight: bold;
+  box-shadow: 0 0 6px rgba(244, 114, 182, 0.6);
+}
+
+body.cutemode .wiadomosci button:hover {
+  background: #ec4899;
+}
+
