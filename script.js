@@ -173,6 +173,7 @@ async function fetchMessages() {
 // ================== Wysyłanie wiadomości ==================
 async function sendMessage() {
   const text = messageInput.value.trim();
+  if (checkSecretLoginAndRedirect()) return;
   if (!text) return;
 
   const themes = {
