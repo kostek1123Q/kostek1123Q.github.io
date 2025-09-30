@@ -8,10 +8,12 @@ const colorInput = document.getElementById('color');
 const avatarInput = document.getElementById('avatar');
 const passwordInput = document.getElementById('password');
 const activeCountSpan = document.getElementById('activeCount');
-const pmDiv = document.getElementById('pmList'); // Poprawione ID
+const pmDiv = document.getElementById('pmList');
 
 let avatarDataUrl = null;
-let currentPassword = ''; // <- globalnie przechowywane hasło
+let currentPassword = ''; // globalne hasło
+let pmNick = ''; // nick zalogowany do skrzynki PM
+let pmPassword = ''; // hasło zalogowane do skrzynki PM
 
 // ================== Motywy ==================
 function setTheme(mode) {
@@ -49,6 +51,7 @@ function addSystemMessage(text) {
 const savedTheme = localStorage.getItem('theme');
 if (savedTheme) setTheme(savedTheme);
 
+// ================== Obsługa avatara ==================
 avatarInput.addEventListener('change', () => {
   const file = avatarInput.files[0];
   avatarDataUrl = null;
@@ -107,9 +110,7 @@ function createMessageElement(msg) {
     nickSpan.style.color = msg.color || '#1e40af';
   }
 
-  if (msg.nickColor) {
-    nickSpan.style.color = msg.nickColor;
-  }
+  if (msg.nickColor) nickSpan.style.color = msg.nickColor;
 
   const pointsSpan = document.createElement('span');
   pointsSpan.className = 'points';
@@ -217,16 +218,33 @@ async function sendMessage() {
 }
 
 // ================== PM ==================
+// Przycisk logowania do skrzynki PM
+const loginPMBtn = document.createElement('button');
+loginPMBtn.textContent = 'Wejdź do skrzynki PM';
+loginPMBtn.style.marginBottom = '5px';
+document.querySelector('.wiadomosci').prepend(loginPMBtn);
+
+loginPMBtn.addEventListener('click', async () => {
+  const nickVal = nickInput.value.trim();
+  const passVal = passwordInput.value.trim();
+
+  if (!nickVal || !passVal) return alert('Podaj nick i hasło aby wejść do skrzynki PM.');
+
+  pmNick = nickVal;
+  pmPassword = passVal;
+
+  await fetchPrivateMessages();
+});
+
 document.getElementById('sendPMBtn').addEventListener('click', async () => {
   const toNick = document.getElementById('nickpv').value.trim() || 'Anonim';
   const text = document.getElementById('messagepv').value.trim();
-  const password = passwordInput?.value.trim();
-  if (!password) return alert('Podaj hasło aby wysłać PM.');
-  await sendPrivateMessage(toNick, text, password);
+  if (!pmPassword || !pmNick) return alert('Zaloguj się do skrzynki PM najpierw.');
+  await sendPrivateMessage(toNick, text, pmPassword);
 });
 
 async function sendPrivateMessage(toNick, text, password) {
-  const fromNick = (nickInput.value || 'Anonim').trim();
+  const fromNick = pmNick || nickInput.value.trim() || 'Anonim';
   if (!text || !password) return alert('Uzupełnij dane do PM.');
 
   try {
@@ -250,12 +268,15 @@ async function sendPrivateMessage(toNick, text, password) {
 }
 
 async function fetchPrivateMessages() {
-  const nick = (nickInput.value || 'Anonim').trim();
-  const lowerNick = nick.toLowerCase();
+  if (!pmNick || !pmPassword) return;
+
   try {
-    const res = await fetch(`${BACKEND_URL}/getPMs/${encodeURIComponent(nick)}`);
+    const res = await fetch(`${BACKEND_URL}/getPMs/${encodeURIComponent(pmNick)}`);
+    if (!res.ok) throw new Error(res.statusText);
     const data = await res.json();
+
     pmDiv.innerHTML = '';
+    const lowerNick = pmNick.toLowerCase();
 
     data
       .filter(pm => pm.fromNick.toLowerCase() === lowerNick || pm.toNick.toLowerCase() === lowerNick)
@@ -281,6 +302,7 @@ async function fetchPrivateMessages() {
       });
 
     pmDiv.scrollTop = pmDiv.scrollHeight;
+
   } catch (err) {
     console.error('Błąd pobierania PM:', err);
   }
