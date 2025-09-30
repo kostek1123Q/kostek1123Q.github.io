@@ -241,7 +241,13 @@ async function sendMessage() {
   }
 }
 
-// ================== WYŚLIJ WIADOMOŚĆ PRYWATNĄ ==================
+// ----------------- WYSYŁANIE PM -----------------
+document.getElementById('sendPMBtn').addEventListener('click', () => {
+  const toNick = document.getElementById('nickpv').value.trim() || 'Anonim';
+  const text = document.getElementById('messagepv').value.trim();
+  sendPrivateMessage(toNick, text);
+});
+
 async function sendPrivateMessage(toNick, text) {
   const fromNick = nickInput.value.trim() || 'Anonim';
   const password = currentPassword;
@@ -267,32 +273,56 @@ async function sendPrivateMessage(toNick, text) {
   }
 }
 
-// ================== POBIERANIE WIADOMOŚCI PRYWATNYCH ==================
+// ----------------- POBIERANIE PM -----------------
 async function fetchPrivateMessages() {
   const nick = nickInput.value.trim() || 'Anonim';
   try {
     const res = await fetch(`${BACKEND_URL}/getPMs/${encodeURIComponent(nick)}`);
     const data = await res.json();
-    console.log('Twoje PM:', data);
-    // Możesz tutaj stworzyć własny UI do wyświetlania PM
+
+    const pmList = document.getElementById('pmList');
+    pmList.innerHTML = '';
+    data.forEach(pm => {
+      const li = document.createElement('li');
+      li.textContent = `[${pm.time}] ${pm.fromNick} → ${pm.toNick}: ${pm.text}`;
+      pmList.appendChild(li);
+    });
   } catch (err) {
     console.error(err);
   }
 }
 
-// ================== POBIERANIE PROFILU UŻYTKOWNIKA ==================
+// ----------------- POKAŻ PROFIL -----------------
+document.getElementById('viewProfileBtn').addEventListener('click', () => {
+  const nick = document.getElementById('profileNick').value.trim();
+  if (!nick) return alert('Podaj nick użytkownika');
+  fetchUserProfile(nick);
+});
+
 async function fetchUserProfile(nick) {
   try {
     const res = await fetch(`${BACKEND_URL}/profile/${encodeURIComponent(nick)}`);
     const data = await res.json();
     if (data.error) return alert(data.error);
 
-    console.log('Profil użytkownika:', data);
-    // Tutaj możesz pokazać modal z profilem
+    const profileInfo = document.getElementById('profileInfo');
+    profileInfo.innerHTML = `
+      <p>Nick: ${data.nick}</p>
+      <p>Punkty: ${data.punkty}</p>
+      <p>Ranga: ${data.ranga}</p>
+      <p>Tag: ${data.tag || 'brak'}</p>
+      <p>Avatar: <img src="${data.avatar}" alt="avatar" width="50"></p>
+      <p style="color:${data.color}">Kolor: ${data.color}</p>
+    `;
   } catch (err) {
     console.error(err);
   }
 }
+
+// Automatyczne odświeżanie PM co 10 sekund
+setInterval(fetchPrivateMessages, 10000);
+fetchPrivateMessages();
+
 
 // ================== Eventy ==================
 sendBtn.addEventListener('click', sendMessage);
