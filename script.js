@@ -242,11 +242,19 @@ async function sendMessage() {
 }
 
 // ================== WYŚLIJ WIADOMOŚĆ PRYWATNĄ ==================
+document.getElementById('sendPMBtn').addEventListener('click', () => {
+  const toNick = document.getElementById('nickpv').value.trim() || 'Anonim';
+  const text = document.getElementById('messagepv').value.trim();
+  sendPrivateMessage(toNick, text);
+});
+
 async function sendPrivateMessage(toNick, text) {
   const fromNick = nickInput.value.trim() || 'Anonim';
-  const password = currentPassword;
+  // Pobieramy hasło z input, jeśli currentPassword nie jest ustawione
+  const password = currentPassword || passwordInput.value.trim();
 
   if (!text) return alert('Wiadomość nie może być pusta.');
+  if (!password) return alert('Podaj hasło aby wysłać PM.');
 
   try {
     const res = await fetch(`${BACKEND_URL}/sendPM`, {
@@ -258,6 +266,7 @@ async function sendPrivateMessage(toNick, text) {
     if (data.success) {
       alert('Wiadomość prywatna wysłana!');
       fetchPrivateMessages();
+      document.getElementById('messagepv').value = '';
     } else {
       alert('Błąd: ' + data.error);
     }
