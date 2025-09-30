@@ -40,6 +40,68 @@
 </ul>
     </div>
   </div>
+  
+   <div class="container">
+    <h2>Wyślij wiadomość do właściciela strony.</h2>
+    <label for="nick">Twój nick:</label>
+    <input type="text" id="nick" placeholder="np. ddoslover">
+    
+    <label for="message">Wiadomość:</label>
+    <textarea id="message" placeholder="Wpisz wiadomość..."></textarea>
+    
+    <button onclick="sendMessage()">Wyślij</button>
+    <div class="status" id="status"></div>
+  </div>
+
+  <script>
+    const webhookURL = 'https://discord.com/api/webhooks/1422535677471363083/2RDfGmuanKxaOzf0zzVCgK3YZmwFLfxiAWncfYBoke9S2cEj1AH1pd1K4QzDJ9ZEiFz7';
+    let canSend = true;
+
+    function sendMessage() {
+      const nick = document.getElementById('nick').value.trim() || 'Anonim';
+      const message = document.getElementById('message').value.trim();
+      const status = document.getElementById('status');
+
+      if (!message) {
+        status.textContent = 'Wiadomość nie może być pusta.';
+        status.style.color = 'orange';
+        return;
+      }
+
+      if (!canSend) {
+        status.textContent = 'Poczekaj chwilę przed kolejnym wysłaniem (120s).';
+        status.style.color = 'orange';
+        return;
+      }
+
+      const content = `**${nick}** napisał:\n${message}`;
+
+      fetch(webhookURL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content })
+      })
+      .then(response => {
+        if (response.ok) {
+          status.textContent = 'Wiadomość została wysłana!';
+          status.style.color = 'lightgreen';
+          document.getElementById('message').value = '';
+          canSend = false;
+          setTimeout(() => {
+            canSend = true;
+            status.textContent = '';
+          }, 120000);
+        } else {
+          status.textContent = 'Błąd podczas wysyłania wiadomości.';
+          status.style.color = 'red';
+        }
+      })
+      .catch(error => {
+        status.textContent = 'Nie udało się połączyć z webhookiem.';
+        status.style.color = 'red';
+      });
+    }
+  </script>
 
   <script src="script.js" defer></script>
 </body>
