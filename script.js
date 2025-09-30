@@ -246,17 +246,15 @@ document.getElementById('sendPMBtn').addEventListener('click', async () => {
   const toNick = document.getElementById('nickpv').value.trim() || 'Anonim';
   const text = document.getElementById('messagepv').value.trim();
 
-  // Upewniamy się, że currentPassword jest ustawione
-  if (!currentPassword && passwordInput) {
-    currentPassword = passwordInput.value.trim();
-  }
+  // Pobieramy aktualne hasło z inputa
+  const password = passwordInput?.value.trim();
+  if (!password) return alert('Podaj hasło aby wysłać PM.');
 
-  await sendPrivateMessage(toNick, text);
+  await sendPrivateMessage(toNick, text, password);
 });
 
-async function sendPrivateMessage(toNick, text) {
+async function sendPrivateMessage(toNick, text, password) {
   const fromNick = nickInput.value.trim() || 'Anonim';
-  const password = currentPassword;
 
   if (!text) return alert('Wiadomość nie może być pusta.');
   if (!password) return alert('Podaj hasło aby wysłać PM.');
@@ -268,8 +266,10 @@ async function sendPrivateMessage(toNick, text) {
       body: JSON.stringify({ fromNick, toNick, text, password })
     });
 
-    // Debug: log body
-    // console.log({ fromNick, toNick, text, password });
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      return alert('Błąd: ' + (errData.error || res.statusText));
+    }
 
     const data = await res.json();
     if (data.success) {
@@ -290,13 +290,18 @@ async function fetchPrivateMessages() {
   const nick = nickInput.value.trim() || 'Anonim';
   try {
     const res = await fetch(`${BACKEND_URL}/getPMs/${encodeURIComponent(nick)}`);
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      return console.error('Błąd pobierania PM:', errData.error || res.statusText);
+    }
     const data = await res.json();
     console.log('Twoje PM:', data);
-    // Możesz tutaj stworzyć własny UI do wyświetlania PM
+    // Tutaj możesz stworzyć własny UI do wyświetlania PM
   } catch (err) {
     console.error(err);
   }
 }
+
 
 // ================== POBIERANIE PROFILU UŻYTKOWNIKA ==================
 async function fetchUserProfile(nick) {
