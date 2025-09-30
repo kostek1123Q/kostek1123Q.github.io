@@ -17,7 +17,7 @@ function setTheme(mode) {
   if (mode === 'pastel') document.body.classList.add('pastel-mode');
   if (mode === 'neon') document.body.classList.add('neon-mode');
   if (mode === 'cute') document.body.classList.add('cute-mode');
-  if (mode === 'light') ; // brak dodatkowych klas = light mode
+  // light mode zostawiamy puste
   localStorage.setItem('theme', mode);
 }
 
@@ -60,6 +60,7 @@ avatarInput.addEventListener('change', () => {
   }
 });
 
+// ================== Tworzenie wiadomości ==================
 function createMessageElement(msg) {
   const div = document.createElement('div');
   div.classList.add('msg');
@@ -70,6 +71,7 @@ function createMessageElement(msg) {
 
   if (isSystem) div.classList.add('system');
 
+  // Avatar
   const img = document.createElement('img');
   img.src = msg.avatar || `https://i.pravatar.cc/40?u=${encodeURIComponent(msg.nick)}`;
   img.alt = 'Avatar';
@@ -77,12 +79,14 @@ function createMessageElement(msg) {
   if (isOwner || isGlobal) img.classList.add('owner-avatar');
   div.appendChild(img);
 
+  // Treść wiadomości
   const content = document.createElement('div');
   content.className = 'content';
 
+  // Nick + tag
   const nickSpan = document.createElement('div');
   nickSpan.className = 'nick';
-  nickSpan.textContent = msg.nick;
+  nickSpan.innerHTML = msg.nick;
 
   if (isOwner) nickSpan.classList.add('owner');
   if (isGlobal) {
@@ -107,20 +111,45 @@ function createMessageElement(msg) {
     nickSpan.style.color = msg.color || '#1e40af';
   }
 
+  // Kolor nicku w tagu
+  if (msg.nickColor) {
+    nickSpan.style.color = msg.nickColor;
+  }
+
+  // Punkty i ranga
+  const pointsSpan = document.createElement('span');
+  pointsSpan.className = 'points';
+  pointsSpan.textContent = msg.punkty ? ` (${msg.punkty} pkt, ${msg.ranga})` : '';
+  nickSpan.appendChild(pointsSpan);
+
   content.appendChild(nickSpan);
 
+  // Treść
   const textSpan = document.createElement('div');
   textSpan.className = 'text';
   textSpan.textContent = msg.text;
   content.appendChild(textSpan);
 
+  // Reakcje
+  if (msg.reactions && Object.keys(msg.reactions).length > 0) {
+    const reactionsDiv = document.createElement('div');
+    reactionsDiv.className = 'reactions';
+    for (const [emoji, count] of Object.entries(msg.reactions)) {
+      const rspan = document.createElement('span');
+      rspan.textContent = `${emoji} ${count}`;
+      reactionsDiv.appendChild(rspan);
+    }
+    content.appendChild(reactionsDiv);
+  }
+
   div.appendChild(content);
   return div;
 }
 
+// ================== Pobieranie wiadomości ==================
 async function fetchMessages() {
   try {
-    const res = await fetch(`${BACKEND_URL}/messages`);
+    const res = await fetch(`${BACKEND_URL}/messagesExtras`);
     if (!res.ok) throw new Error(res.statusText);
     const data = await res.json();
     messagesDiv.innerHTML = '';
@@ -133,11 +162,12 @@ async function fetchMessages() {
   }
 }
 
+// ================== Wysyłanie wiadomości ==================
 async function sendMessage() {
   const text = messageInput.value.trim();
   if (!text) return;
 
-  // ====== Komendy motywu ======
+  // Komendy motywu
   const themes = {
     '/darkmode': { mode: 'dark', msg: '🌙 Zmieniono motyw na Dark Mode' },
     '/lightmode': { mode: 'light', msg: '☀️ Zmieniono motyw na Light Mode' },
@@ -153,7 +183,7 @@ async function sendMessage() {
     return;
   }
 
-  // ====== Normalna wiadomość ======
+  // Normalna wiadomość
   const password = passwordInput ? passwordInput.value.trim() : '';
   const nick = nickInput.value.trim() || 'Anonim';
   if (nick.toUpperCase().includes('GLOBALCHATPL')) {
@@ -163,7 +193,7 @@ async function sendMessage() {
 
   const bannedPhrases = [
     'darmowa dziecia pornografia! jebac kostka hacked by ususzony <3<3<3',
-    'jest tu ktoś z jpg?',
+    'jest tu ktoś z jpg?'
   ];
   for (const phrase of bannedPhrases) {
     if (text.toLowerCase().includes(phrase)) {
@@ -197,6 +227,7 @@ async function sendMessage() {
   }
 }
 
+// ================== Eventy ==================
 sendBtn.addEventListener('click', sendMessage);
 messageInput.addEventListener('keydown', e => {
   if (e.key === 'Enter' && !e.shiftKey) {
@@ -205,5 +236,6 @@ messageInput.addEventListener('keydown', e => {
   }
 });
 
+// ================== Start ==================
 fetchMessages();
 setInterval(fetchMessages, 3000);
