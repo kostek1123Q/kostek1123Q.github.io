@@ -461,7 +461,7 @@ body.neon-mode .wiadomosci button { background:#ff00ff; }
 body.neon-mode .wiadomosci button:hover { background:#ff1493; }
 
 /* Cute mode */
-body.cutemode .wiadomosci { background:#fff0f6; border:2px solid #fbcfe8; }
+body.cutemode .wiadomosci { background:#fdbaff; border:2px solid #fbcfe8; }
 body.cutemode .wiadomosci input,
 body.cutemode .wiadomosci textarea { background:#fff0f6; border-color:#f9a8d4; color:#4a044e; }
 body.cutemode .wiadomosci button { background:#f472b6; font-weight:bold; }
