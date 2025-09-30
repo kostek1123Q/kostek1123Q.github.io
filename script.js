@@ -241,6 +241,59 @@ async function sendMessage() {
   }
 }
 
+// ================== WYŚLIJ WIADOMOŚĆ PRYWATNĄ ==================
+async function sendPrivateMessage(toNick, text) {
+  const fromNick = nickInput.value.trim() || 'Anonim';
+  const password = currentPassword;
+
+  if (!text) return alert('Wiadomość nie może być pusta.');
+
+  try {
+    const res = await fetch(`${BACKEND_URL}/sendPM`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fromNick, toNick, text, password })
+    });
+    const data = await res.json();
+    if (data.success) {
+      alert('Wiadomość prywatna wysłana!');
+      fetchPrivateMessages();
+    } else {
+      alert('Błąd: ' + data.error);
+    }
+  } catch (err) {
+    console.error(err);
+    alert('Błąd wysyłania PM');
+  }
+}
+
+// ================== POBIERANIE WIADOMOŚCI PRYWATNYCH ==================
+async function fetchPrivateMessages() {
+  const nick = nickInput.value.trim() || 'Anonim';
+  try {
+    const res = await fetch(`${BACKEND_URL}/getPMs/${encodeURIComponent(nick)}`);
+    const data = await res.json();
+    console.log('Twoje PM:', data);
+    // Możesz tutaj stworzyć własny UI do wyświetlania PM
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+// ================== POBIERANIE PROFILU UŻYTKOWNIKA ==================
+async function fetchUserProfile(nick) {
+  try {
+    const res = await fetch(`${BACKEND_URL}/profile/${encodeURIComponent(nick)}`);
+    const data = await res.json();
+    if (data.error) return alert(data.error);
+
+    console.log('Profil użytkownika:', data);
+    // Tutaj możesz pokazać modal z profilem
+  } catch (err) {
+    console.error(err);
+  }
+}
+
 // ================== Eventy ==================
 sendBtn.addEventListener('click', sendMessage);
 messageInput.addEventListener('keydown', e => {
