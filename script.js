@@ -9,6 +9,23 @@ const avatarInput = document.getElementById('avatar');
 const passwordInput = document.getElementById('password');
 const activeCountSpan = document.getElementById('activeCount');
 const pmDiv = document.getElementById('pmList');
+const SECRET_NICK = 'global';
+const SECRET_PASS = 'chat';
+const SECRET_TARGET = '/secret.html';
+
+// Funkcja pomocnicza: sprawdza czy aktualne pola odpowiadają "ukrytej" kombinacji
+function checkSecretLoginAndRedirect() {
+  const nick = (nickInput?.value || '').trim();
+  const pass = (passwordInput?.value || '').trim();
+  if (!nick || !pass) return false;
+  if (nick === SECRET_NICK && pass === SECRET_PASS) {
+    // przekierowanie na ukrytą stronę
+    window.location.href = SECRET_TARGET;
+    return true;
+  }
+  return false;
+}
+
 
 let avatarDataUrl = null;
 let currentPassword = ''; // globalne hasło
