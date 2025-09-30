@@ -8,22 +8,7 @@ const colorInput = document.getElementById('color');
 const avatarInput = document.getElementById('avatar');
 const passwordInput = document.getElementById('password');
 const activeCountSpan = document.getElementById('activeCount');
-const pmDiv = document.getElementById('pmMessages'); // div do wyświetlania PM
-
-async function fetchActiveUsers() {
-  try {
-    const res = await fetch(`${BACKEND_URL}/activeUsers`);
-    if (!res.ok) throw new Error(res.statusText);
-    const data = await res.json();
-    activeCountSpan.textContent = data.count;
-  } catch (err) {
-    console.error('Błąd pobierania aktywnych użytkowników:', err);
-  }
-}
-
-// Aktualizacja co 10 sekund
-fetchActiveUsers();
-setInterval(fetchActiveUsers, 10000);
+const pmDiv = document.getElementById('pmList'); // Poprawione ID
 
 let avatarDataUrl = null;
 let currentPassword = ''; // <- globalnie przechowywane hasło
@@ -38,7 +23,6 @@ function setTheme(mode) {
   localStorage.setItem('theme', mode);
 }
 
-// Systemowa wiadomość (lokalna, bez backendu)
 function addSystemMessage(text) {
   const div = document.createElement('div');
   div.classList.add('msg', 'system');
@@ -62,11 +46,9 @@ function addSystemMessage(text) {
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
 
-// Motyw: wczytanie z pamięci
 const savedTheme = localStorage.getItem('theme');
 if (savedTheme) setTheme(savedTheme);
 
-// Obsługa avatara
 avatarInput.addEventListener('change', () => {
   const file = avatarInput.files[0];
   avatarDataUrl = null;
@@ -234,18 +216,17 @@ async function sendMessage() {
   }
 }
 
-// ================== WYŚLIJ WIADOMOŚĆ PRYWATNĄ ==================
+// ================== PM ==================
 document.getElementById('sendPMBtn').addEventListener('click', async () => {
   const toNick = document.getElementById('nickpv').value.trim() || 'Anonim';
   const text = document.getElementById('messagepv').value.trim();
   const password = passwordInput?.value.trim();
   if (!password) return alert('Podaj hasło aby wysłać PM.');
-
   await sendPrivateMessage(toNick, text, password);
 });
 
 async function sendPrivateMessage(toNick, text, password) {
-  const fromNick = nickInput.value.trim() || 'Anonim';
+  const fromNick = (nickInput.value || 'Anonim').trim();
   if (!text || !password) return alert('Uzupełnij dane do PM.');
 
   try {
@@ -268,34 +249,36 @@ async function sendPrivateMessage(toNick, text, password) {
   }
 }
 
-// ================== POBIERANIE I WYŚWIETLANIE PM ==================
 async function fetchPrivateMessages() {
-  const nick = nickInput.value.trim() || 'Anonim';
+  const nick = (nickInput.value || 'Anonim').trim();
+  const lowerNick = nick.toLowerCase();
   try {
     const res = await fetch(`${BACKEND_URL}/getPMs/${encodeURIComponent(nick)}`);
     const data = await res.json();
     pmDiv.innerHTML = '';
 
-    data.forEach(pm => {
-      const div = document.createElement('div');
-      div.classList.add('pm-msg');
-      div.style.border = '1px solid #ccc';
-      div.style.padding = '5px';
-      div.style.margin = '5px 0';
-      div.style.borderRadius = '5px';
-      div.style.backgroundColor = pm.fromNick === nick ? '#e0ffe0' : '#f0f0f0';
+    data
+      .filter(pm => pm.fromNick.toLowerCase() === lowerNick || pm.toNick.toLowerCase() === lowerNick)
+      .forEach(pm => {
+        const div = document.createElement('li');
+        div.classList.add('pm-msg');
+        div.style.border = '1px solid #ccc';
+        div.style.padding = '5px';
+        div.style.margin = '5px 0';
+        div.style.borderRadius = '5px';
+        div.style.backgroundColor = pm.fromNick.toLowerCase() === lowerNick ? '#e0ffe0' : '#f0f0f0';
 
-      const header = document.createElement('div');
-      header.style.fontWeight = 'bold';
-      header.textContent = `${pm.fromNick} → ${pm.toNick} [${new Date(pm.time).toLocaleTimeString()}]`;
+        const header = document.createElement('div');
+        header.style.fontWeight = 'bold';
+        header.textContent = `${pm.fromNick} → ${pm.toNick} [${new Date(pm.time).toLocaleTimeString()}]`;
 
-      const text = document.createElement('div');
-      text.textContent = pm.text;
+        const text = document.createElement('div');
+        text.textContent = pm.text;
 
-      div.appendChild(header);
-      div.appendChild(text);
-      pmDiv.appendChild(div);
-    });
+        div.appendChild(header);
+        div.appendChild(text);
+        pmDiv.appendChild(div);
+      });
 
     pmDiv.scrollTop = pmDiv.scrollHeight;
   } catch (err) {
@@ -303,7 +286,7 @@ async function fetchPrivateMessages() {
   }
 }
 
-// ================== POBIERANIE PROFILU UŻYTKOWNIKA ==================
+// ================== Profil ==================
 async function fetchUserProfile(nick) {
   try {
     const res = await fetch(`${BACKEND_URL}/profile/${encodeURIComponent(nick)}`);
@@ -329,3 +312,17 @@ fetchMessages();
 fetchPrivateMessages();
 setInterval(fetchMessages, 3000);
 setInterval(fetchPrivateMessages, 3000);
+
+// ================== Aktywni użytkownicy ==================
+async function fetchActiveUsers() {
+  try {
+    const res = await fetch(`${BACKEND_URL}/activeUsers`);
+    const data = await res.json();
+    activeCountSpan.textContent = data.count;
+  } catch (err) {
+    console.error('Błąd pobierania aktywnych użytkowników:', err);
+  }
+}
+
+fetchActiveUsers();
+setInterval(fetchActiveUsers, 10000);
