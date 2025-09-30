@@ -466,3 +466,31 @@ body.cutemode .wiadomosci input,
 body.cutemode .wiadomosci textarea { background:#fff0f6; border-color:#f9a8d4; color:#4a044e; }
 body.cutemode .wiadomosci button { background:#f472b6; font-weight:bold; }
 body.cutemode .wiadomosci button:hover { background:#ec4899; }
+
+.badge {
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: bold;
+  margin-left: 6px;
+}
+.badge.nowy { background: #d1d5db; color: #111; }
+.badge.aktywny { background: #3b82f6; color: white; }
+.badge.pro { background: #10b981; color: white; }
+.badge.legenda { background: gold; color: #111; }
+
+.reactions {
+  margin-top: 6px;
+  display: flex;
+  gap: 6px;
+}
+.reactions button {
+  background: transparent;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 2px 6px;
+  cursor: pointer;
+}
+.reactions button:hover {
+  background: #eee;
+}
