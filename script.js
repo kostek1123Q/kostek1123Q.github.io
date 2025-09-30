@@ -16,8 +16,8 @@ function setTheme(mode) {
   if (mode === 'dark') document.body.classList.add('dark-mode');
   if (mode === 'pastel') document.body.classList.add('pastel-mode');
   if (mode === 'neon') document.body.classList.add('neon-mode');
-  if (mode === 'cute') document.body.classList.add('cutemode');
-  if (mode === 'light') ; // zostaw puste = brak dodatkowych klas
+  if (mode === 'cute') document.body.classList.add('cute-mode');
+  if (mode === 'light') ; // brak dodatkowych klas = light mode
   localStorage.setItem('theme', mode);
 }
 
