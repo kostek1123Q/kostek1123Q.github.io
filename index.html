@@ -50,67 +50,32 @@
     </div>
   </div>
 
-  <div class="wiadomosci">
-    <h2>Wyślij wiadomość do właściciela strony. [OFF]</h2>
-    <label for="nickpv">Twój nick:</label>
-    <input type="text" id="nickpv" placeholder="np. użytkownik">
-
-    <label for="messagepv">Wiadomość:</label>
-    <textarea id="messagepv" placeholder="Wpisz wiadomość..."></textarea>
-
-    <button onclick="sendMessage()">Wyślij</button>
-    <div class="status" id="status"></div>
+  <!-- ================= PM I PROFIL ================= -->
+<div class="wiadomosci">
+  <h2>Prywatne Wiadomości</h2>
+  <div>
+    <label for="nickpv">Do użytkownika:</label>
+    <input type="text" id="nickpv" placeholder="Nick odbiorcy">
   </div>
+  <div>
+    <label for="messagepv">Wiadomość:</label>
+    <textarea id="messagepv" placeholder="Napisz wiadomość"></textarea>
+  </div>
+  <button id="sendPMBtn">Wyślij PM</button>
 
-  <script>
-    const webhookURL = 'https://discord.com/api/webhooks/1422535677471363083/2RDfGmuanKxaOzf0zzVCgK3YZmwFLfxiAWncfYBoke9S2cEj1AH1pd1K4QzDJ9ZEiFz7';
-    let canSend = true;
+  <h3>Otrzymane/Wysłane PM</h3>
+  <ul id="pmList"></ul>
+</div>
 
-    function sendMessage() {
-      const nickpv = document.getElementById('nickpv').value.trim() || 'Anonim';
-      const messagepv = document.getElementById('messagepv').value.trim();
-      const status = document.getElementById('status');
-
-      if (!messagepv) {
-        status.textContent = 'Wiadomość nie może być pusta.';
-        status.style.color = 'orange';
-        return;
-      }
-
-      if (!canSend) {
-        status.textContent = 'Poczekaj chwilę przed kolejnym wysłaniem (120s).';
-        status.style.color = 'orange';
-        return;
-      }
-
-      const content = `**${nickpv}** napisał:\n${messagepv}`;
-
-      fetch(webhookURL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content })
-      })
-      .then(response => {
-        if (response.ok) {
-          status.textContent = 'Wiadomość została wysłana!';
-          status.style.color = 'lightgreen';
-          document.getElementById('messagepv').value = '';
-          canSend = false;
-          setTimeout(() => {
-            canSend = true;
-            status.textContent = '';
-          }, 120000);
-        } else {
-          status.textContent = 'Błąd podczas wysyłania wiadomości.';
-          status.style.color = 'red';
-        }
-      })
-      .catch(error => {
-        status.textContent = 'Nie udało się połączyć z webhookiem.';
-        status.style.color = 'red';
-      });
-    }
-  </script>
+<div class="profile">
+  <h2>Profil użytkownika</h2>
+  <div>
+    <label for="profileNick">Nick:</label>
+    <input type="text" id="profileNick" placeholder="Podaj nick">
+    <button id="viewProfileBtn">Pokaż profil</button>
+  </div>
+  <div id="profileInfo"></div>
+</div>
 
   <!-- Twój chat.js -->
   <script src="script.js" defer></script>
